@@ -1,0 +1,18 @@
+body {
+    background-color: #fafafa;}
+
+#myDiagramDiv {
+    width: 100%;
+    height: 300px;
+    border: 1px solid #797979;
+}
+
+.dh {
+    width: 49.5%;
+    height: 300px;
+    border: 1px solid #797979;
+}
+
+#restoreFromDatabase {
+    float: right;
+}

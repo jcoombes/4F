@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="x-ua-compatible" content="ie-edge" />
+      
+    <title>Final Challenge</title>
+    <link rel="stylesheet" href="css/main.css"/>
+    <link rel="icon" href="images/favicon-32x32.png"/>
+    <script src="https://unpkg.com/gojs/release/go-debug.js"></script>
+    <script type="application/javascript" src="js/dragDropFields.js"></script>
+  </head>
+    
+  <body onload="init()">
+    <h3>Vectis - Final Challenge </h3>   
+    <div id="sample">
+      <div id="myDiagramDiv"></div>
+
+      <p>Seek new Citizens of Interest using the plus button on the upper right of the Citizens of Interest Pane!</p>
+      <p>Drag fields between records to move them; dragging within the same node can reorder them.
+      Fields can be copied when holding down the control key; they are deleted when dropped in the diagram's background.
+      The "record" Nodes are not movable or copyable or deletable.</p>
+      <p>The model data is automatically updated after each change or undo or redo:</p>
+
+      <p>Local model data is displayed below left. The firebase realtime DB model data is displayed below right.</p>
+      
+      <div id="DataHolders">
+      <textarea class="dh" readonly style="float:left;" id="mySavedModel"></textarea>
+      <textarea class="dh" readonly style="float:right;" id="DatabaseLoad"></textarea>
+      </div>
+      
+      <div>
+      <button id="deleteLocalMetadata">Delete Local Metadata</button>
+      <button id="restoreFromDatabase">Restore From Database</button>
+      </div>
+    </div>
+
+    <p>Try deleting the local data, then restoring from the database.</p>
+
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-app.js"></script>
+
+  <!-- TODO: Add SDKs for Firebase products that you want to use
+   https://firebase.google.com/docs/web/setup#available-libraries -->
+  <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-database.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.2.6/firebase-firestore.js"></script>
+
+
+  <script>
+    // Your web app's Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyAkr4SiRqhQDv_XaBiHoSVk3du-pCXgom0",
+      authDomain: "vectis-c8b39.firebaseapp.com",
+      databaseURL: "https://vectis-c8b39-default-rtdb.europe-west1.firebasedatabase.app/",
+      projectId: "vectis-c8b39",
+      storageBucket: "vectis-c8b39.appspot.com",
+      messagingSenderId: "374999869671",
+      appId: "1:374999869671:web:0599a4b0425d0d3ae79a42"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+    
+    document.getElementById("mySavedModel").addEventListener("input", 
+    (event) => {
+
+      var database = firebase.database();
+
+      console.log(`you changed ${event.target.value}`);
+      database.ref().set(event.target.value);
+    }
+    );
+  </script>
+
+  <script>
+    document.getElementById("mySavedModel").addEventListener("input", 
+    (event) => {
+    firebase.database().ref().once("value").then((printable) => {
+      console.log(`Came back?: ${printable.toJSON()}`);
+      document.getElementById("DatabaseLoad").value = printable.toJSON();
+    })
+    });
+
+    document.getElementById("deleteLocalMetadata").addEventListener("click",
+    (event) => {
+        document.getElementById("mySavedModel").value = "";
+    }
+
+    );
+    document.getElementById("restoreFromDatabase").addEventListener("click", 
+    (event) => {
+        document.getElementById("mySavedModel").value =
+        document.getElementById("DatabaseLoad").value;
+    }
+    );
+  </script>
+  </body>
+</html>
